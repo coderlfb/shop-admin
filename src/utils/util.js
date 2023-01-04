@@ -8,4 +8,13 @@ export default {
   hideFullLoading() {
     NProgress.done();
   },
+
+  /**
+   * 获取本地图
+   * @param name // 文件名 如 doc.png
+   * @returns {*|string}
+   */
+  getAssetsImages(name) {
+    return new URL(`/src/assets/${name}`, import.meta.url).href;
+  },
 };

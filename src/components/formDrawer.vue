@@ -6,6 +6,7 @@
     :close-on-click-modal="false"
     direction="rtl"
     :destroy-on-close="destroyOnClose"
+    @close="handleCloseDrawer"
   >
     <div class="form-drawer">
       <div class="body">
@@ -15,7 +16,7 @@
         <el-button type="primary" @click="submit">{{
           confirmButtonText
         }}</el-button>
-        <el-button type="primary" @click="handleShowDrawer">取消</el-button>
+        <el-button type="info" @click="handleShowDrawer">取消</el-button>
       </div>
     </div>
   </el-drawer>
@@ -23,6 +24,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useStore } from "vuex";
 
 defineProps({
   title: String,
@@ -40,10 +42,20 @@ defineProps({
   },
 });
 
+const store = useStore();
 const isShowDrawer = ref(false);
 
 const handleShowDrawer = () => {
   isShowDrawer.value = !isShowDrawer.value;
+  if (isShowDrawer.value) {
+    store.commit("changeZIndex", 1);
+  } else {
+    store.commit("changeZIndex", 10);
+  }
+};
+
+const handleCloseDrawer = () => {
+  store.commit("changeZIndex", 10);
 };
 
 const emit = defineEmits(["submit"]);

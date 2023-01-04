@@ -2,7 +2,7 @@ import axios from "axios";
 import auth from "~/utils/auth.js";
 import { ElLoading } from "element-plus";
 import store from "./store";
-import router from "./router";
+import { router } from "./router";
 
 const request = axios.create({
   baseURL: "/api",
@@ -32,7 +32,6 @@ function isHideLoading() {
  */
 request.interceptors.request.use(
   (config) => {
-    console.log("是否隐藏loading====", isHideLoading());
     if (!isHideLoading()) {
       loading = ElLoading.service({
         lock: true,

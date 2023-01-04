@@ -1,4 +1,4 @@
-import router from "./router";
+import { router, addRoutes } from "./router";
 import auth from "~/utils/auth.js";
 import noticefy from "~/utils/noticefy";
 import store from "./store";
@@ -24,15 +24,19 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // 如果用户已经登录过，则自动获取用户信息
+  let hasNewRoutes = false;
   if (token) {
-    await store.dispatch("getUserInfo");
+    let { menus } = await store.dispatch("getUserInfo");
+    // 动态添加路由
+    hasNewRoutes = addRoutes(menus);
   }
 
   // 设置页面标题
   let title = (to.meta.title ? to.meta.title : "") + "-商城管理后台";
   document.title = title;
 
-  next();
+  // 有新路由就指定路由
+  hasNewRoutes ? next(to.fullPath) : next();
 });
 
 // 全局后置钩子

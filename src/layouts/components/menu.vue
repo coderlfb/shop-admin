@@ -3,7 +3,7 @@
     <el-menu
       background-color="#545c64"
       class="border-0"
-      default-active="2"
+      :default-active="$store.state.defaultActive"
       text-color="#fff"
       @select="handleSelect"
       :collapse="isCollapse"
@@ -20,13 +20,13 @@
             <span>{{ item.name }}</span>
           </template>
           <template v-for="(ele, idx) in item.child" :key="idx">
-            <el-menu-item :index="ele.frontPath">
+            <el-menu-item :index="ele.frontpath">
               <el-icon><component :is="ele.icon"></component></el-icon>
               <span>{{ ele.name }}</span></el-menu-item
             >
           </template>
         </el-sub-menu>
-        <el-menu-item v-else :index="item.frontPath">
+        <el-menu-item v-else :index="item.frontpath">
           <el-icon><component :is="item.icon"></component></el-icon>
           <span>{{ item.name }}</span>
         </el-menu-item>
@@ -39,61 +39,22 @@
 import { computed, onMounted, ref } from "vue";
 import managerService from "~/api/managerService";
 import noticefy from "../../utils/noticefy";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
-const asideMenus = [
-  {
-    name: "后台面板",
-    icon: "help",
-    frontPath: "",
-    child: [
-      {
-        name: "主控台",
-        icon: "home-filled",
-        frontPath: "/",
-      },
-    ],
-  },
-  {
-    name: "商品管理",
-    icon: "shopping-bag",
-    frontPath: "",
-    child: [
-      {
-        name: "商品管理",
-        icon: "shopping-cart-full",
-        frontPath: "/goods/list",
-      },
-    ],
-  },
-];
 const router = useRouter();
 const store = useStore();
+const route = useRoute();
+const asideMenus = computed(() => store.state.menus);
+const defaultActive = computed(() => (store.state.defaultActive = route.path));
 const isCollapse = computed(() => !(store.state.asideWidth == "250px"));
-
-// const asideMenus = ref([]);
 
 // 选择某个菜单
 const handleSelect = (e) => {
-  console.log("点击回调：", e);
+  console.log("点击菜单回调：", e);
   router.push(e);
 };
-
-// 获取用户菜单
-// const getMenuList = () => {
-//   managerService
-//     .getMenuList()
-//     .then((res) => {
-//       asideMenus.value = res.menus;
-//     })
-//     .catch((err) => {
-//       noticefy.noticefyMessage("error", err.message);
-//     });
-// };
-onMounted(() => {
-  // getMenuList();
-});
+store.commit("initMenusActive", route.path);
 </script>
 
 <style lang="scss">
@@ -107,5 +68,9 @@ onMounted(() => {
   background: #545c64;
   border: none;
   @apply fixed;
+}
+
+.menu-container::-webkit-scrollbar {
+  width: 0px;
 }
 </style>

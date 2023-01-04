@@ -26,14 +26,14 @@ export default {
   /**
    * 修改密码
    */
-  changePassword: function (postData) {
+  changePassword(postData) {
     return axios.post("/admin/updatepassword", postData);
   },
 
   /**
-   * 获取管理员信息和权限菜单
+   * 获取首页统计接口1
    */
-  getMenuList: function () {
-    return axios.post("/admin/getinfo");
+  getStatisticalInfo() {
+    return axios.get("/admin/statistics1");
   },
 };

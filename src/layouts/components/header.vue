@@ -217,6 +217,7 @@ const logout = () => {
 .header-container {
   @apply flex bg-indigo-700 items-center text-light-50 fixed top-0 left-0 right-0;
   height: 64px;
+  z-index: 10;
 
   .logo {
     @apply flex justify-center items-center text-xl font-thin;
